@@ -10,12 +10,19 @@ class Graphics(object):
     def __init__(self, screenSize):
         # initialize all pygame modules
         pygame.init()
-        # indicate rendering details
-        displayFlags = pygame.RESIZABLE
-        # create and display the window
-        self.screen = pygame.display.set_mode(screenSize, displayFlags)
+        # fixed size: the amr position is stored in pixels, so resizing would move it off the grid
+        self.screen = pygame.display.set_mode(screenSize)
         # set the text that appears in the title bar of the window
-        pygame.display.set_caption("AMR in Pygame")      
+        pygame.display.set_caption("MazeRunner")
+
+    # shade every node the amr has already been on
+    def drawVisited(self, map, visited, color=(200, 235, 255)):
+        rowDistance = self.screen.get_height()/(len(map) - 1)
+        colDistance = self.screen.get_width()/(len(map[0]) - 1)
+        for row, col in visited:
+            x, y = turn2pixel(map, self.screen.get_height(), self.screen.get_width(), row, col)
+            pygame.draw.rect(self.screen, color,
+                             (x - colDistance/2, y - rowDistance/2, colDistance, rowDistance))
 
     # draw dot line
     def drawDottedLine(self, color, start_pos, end_pos, dot_length=5, space_length=15):

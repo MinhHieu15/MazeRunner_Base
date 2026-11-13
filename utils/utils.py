@@ -1,4 +1,45 @@
+from collections import deque
 import numpy as np
+
+# heading in degrees -> (row, col) step in node coordinates (row 0 is the bottom of the screen)
+HEADING_STEP = {90: (1, 0), 270: (-1, 0), 0: (0, 1), 180: (0, -1)}
+
+def neighbourNode(node, heading):
+    dr, dc = HEADING_STEP[heading]
+    return (node[0] + dr, node[1] + dc)
+
+# breadth-first search from start to the closest free node not in visited,
+# returns the headings to follow, or [] if every reachable node is visited
+def pathToNearestUnvisited(map, start, visited):
+    parent = {start: None}
+    queue = deque([start])
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            headings = []
+            while parent[node] is not None:
+                node, heading = parent[node]
+                headings.append(heading)
+            return headings[::-1]
+        for heading in HEADING_STEP:
+            nxt = neighbourNode(node, heading)
+            if nxt not in parent and map[nxt[0]][nxt[1]] == 0:
+                parent[nxt] = (node, heading)
+                queue.append(nxt)
+    return []
+
+# number of free nodes the amr can reach from start
+def countReachable(map, start):
+    seen = {start}
+    queue = deque([start])
+    while queue:
+        node = queue.popleft()
+        for heading in HEADING_STEP:
+            nxt = neighbourNode(node, heading)
+            if nxt not in seen and map[nxt[0]][nxt[1]] == 0:
+                seen.add(nxt)
+                queue.append(nxt)
+    return len(seen)
 
 # Notice that pygame coordinate system vs node coordinate system
 # turn node position into pixel position 

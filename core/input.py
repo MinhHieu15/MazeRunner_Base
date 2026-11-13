@@ -9,8 +9,10 @@ class Input(object):
     def update(self):
         # iterate over all user input events (such as keyboard or mouse) that occured since the last time events were checked
         for event in pygame.event.get():
-        #     # quit event occurs by clicking button to close window
+            # quit event occurs by clicking button to close window, or pressing Esc
             if event.type == pygame.QUIT:
+                self.quit = True
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 self.quit = True
         
 

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+c/mazerunner
+c/mazerunner.exe
+*.o
